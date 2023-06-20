@@ -10,8 +10,6 @@ var testRouter = require('./routes/test');
 var getSearchBlockOrderRouter = require('./routes/getSearchBlockOrder');
 var checkAdSectionRouter = require('./routes/checkAdSection');
 const keywordExcelRouter = require('./routes/keywordExcel');
-const postTestRouter = require('./routes/postTest');
-
 
 var app = express();
 
@@ -31,7 +29,6 @@ app.use('/test', testRouter);
 app.use('/get-search-block-order', getSearchBlockOrderRouter);
 app.use('/check-ad-section', checkAdSectionRouter);
 app.use('/keyword-excel', keywordExcelRouter);
-app.use('/post-test', postTestRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
