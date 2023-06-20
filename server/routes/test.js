@@ -6,8 +6,9 @@ var client_id = 'lUVXg6tiDzC4LmrpRtIa';
 var client_secret = 'rfhbfOAfPV';
 
 router.get('/', function (req, res) {
-    var api_url = 'https://openapi.naver.com/v1/search/shop.json?query=' + encodeURI(req.query.query); // JSON 결과
- //   var api_url = 'https://openapi.naver.com/v1/search/blog.xml?query=' + encodeURI(req.query.query); // XML 결과
+    var api_url = 'https://openapi.naver.com/v1/search/shop.json?query=' + encodeURI('땀복'); // JSON 결과
+    // var api_url = 'https://openapi.naver.com/v1/search/shop.json?query=' + encodeURI(req.query.query); // JSON 결과
+
     var request = require('request');
     var options = {
         url: api_url,

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import logo from './logo.svg';
 import './App.css';
 import * as XLSX from "xlsx";
+import axios from 'axios';
 
 function App() {
   const [items, setItems] = useState([]);
@@ -33,8 +34,22 @@ function App() {
 
     promise.then((d)=>{
       setItems(d);
+      sendExcelData(d);
     });
+
   };
+
+  const sendExcelData = async(excelData) => {
+    try {
+      const response = await axios.post('/keyword-excel', {
+        excelData
+      });
+      // console.log('aaaaaaa');
+      // console.log('CLIENT send data : ', response.excelData);
+    } catch (err) {
+      console.log('ERROR sendExcelData : \n', err.response);
+    }
+  }
 
   return (
     <div>
@@ -52,7 +67,9 @@ function App() {
             <th scope="col">Keyword</th>
             <th scope="col">Category</th>
             <th scope="col">BlockRank</th>
-            <th scope="col">Site</th>
+            <th scope="col">AD_1st</th>
+            <th scope="col">AD_2nd</th>
+            <th scope="col">AD_3rd</th>
           </tr>
         </thead>
         <tbody>
@@ -62,7 +79,9 @@ function App() {
                 <th>{d.Keyword}</th>
                 <td>{d.Category}</td>
                 <td>{d.BlockRank}</td>
-                <td>{d.Site}</td>
+                <td>{d.AD_1st}</td>
+                <td>{d.AD_2nd}</td>
+                <td>{d.AD_3rd}</td>
               </tr>
             ))
           }
