@@ -57,7 +57,7 @@ function App() {
     const ws = XLSX.utils.json_to_sheet(columns);
     const wb = XLSX.utils.book_new();
  
-    console.log('items : ', items);
+    console.log('Excel download ==> excelData : ', items);
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, `NADAS_${Date.now()}.xlsx`);
   };

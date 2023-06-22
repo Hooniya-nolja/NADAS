@@ -9,6 +9,7 @@ const { resolve } = require('path');
 let client_id = 'lUVXg6tiDzC4LmrpRtIa';
 let client_secret = 'rfhbfOAfPV';
 let excelDataOver;
+let searchCount = 1;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -47,13 +48,8 @@ router.post('/', async (req, res) => {
     excelDataOver = req.body.excelData;
 
     await searchPageCategory(excelData, res)
-    console.log('=============== Here is routerPOST =============== \n');
 
     res.send(excelDataOver);
-    // setTimeout(function() {
-    //   res.send(excelDataOver);
-    // }, 3000);
-    console.log('SEARCH FINISHED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     return 0;
   } catch (err) {
     console.log('ERROR : \n', err);
@@ -63,25 +59,14 @@ router.post('/', async (req, res) => {
 
 const searchPageCategory = async (excelData, res) => {
   try {
-    console.log('HERE222222222');
 
     for (let i in excelData) {
-      console.log('HERE33333333333');
       let keywordCategory = 'keywordcategory';
       keywordCategory = await searchKeywordCategory(excelData[i].Keyword, i, res);
       await apiDelay(100);
-      console.log('HERE44444444444');
     }
 
-    // console.log('HERE33333333333');
-    // await searchKeywordCategory(excelData[0].Keyword, 0, res);
-    // console.log('HERE44444444444');
-
-    // console.log('HERE55555555555');
-    // await searchKeywordCategory(excelData[1].Keyword, 1, res);
-    // console.log('HERE666666666666');
-
-    console.log('=============== Here is searchPageCategory finish =============== \n');
+    // console.log('=============== Here is searchPageCategory finish =============== \n');
     return 0;
   } catch (error) {
     console.log('ERROR :: error in searchPageCategory Function\n ' + error);
@@ -103,16 +88,14 @@ const searchKeywordCategory = (keyword, num, res) => {
     request.get(options, async function (error, response, body) {
       if (!error && response.statusCode == 200) {
         searchResult = JSON.parse(body).items;
-        console.log('Before REQUEST #######\n');
         categoryKinds = getCategoryKinds(searchResult);
-        console.log('categoryKinds : ', categoryKinds);
+        console.log('#',searchCount,' categoryKinds : ', categoryKinds);
+        searchCount++;
         excelDataOver[num].Category = categoryKinds;
         resolve(categoryKinds);
-        // return categoryKinds;
       } else {
         console.log('error = ' + response.statusCode + '\n ERROR at API REQUEST :: ' + error);
         resolve(res.status(response.statusCode).end());
-        // return res.status(response.statusCode).end();
       }
     });
   
@@ -129,7 +112,6 @@ const getCategoryKinds = (searchResultArr) => {
     if (!keywordCategoryArr.includes(productCategory)) keywordCategoryArr.push(productCategory);
   }
   let keywordCategoryString = keywordCategoryArr.join(' AND ');
-  console.log('keywordCategoryString : \n', keywordCategoryString);
   return keywordCategoryString;
 }
 
