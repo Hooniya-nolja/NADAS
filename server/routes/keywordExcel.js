@@ -50,6 +50,14 @@ router.post('/', wrap(async(req, res) => {
     const excelData = req.body.excelData;
     excelDataOver = req.body.excelData;
 
+    // const search = () => {
+    //   return new Promise((resolve) => {
+    //     searchPageCategory(excelData, res);
+    //     searchBlockOrder(excelData, res);
+    //     resolve();
+    //   });
+    // }
+
     await searchPageCategory(excelData, res);
     await searchBlockOrder(excelData, res);
     // category 찾아둔것 미리 저장

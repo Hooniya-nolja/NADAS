@@ -85,9 +85,9 @@ function App() {
             <th scope="col">Keyword</th>
             <th scope="col">Category</th>
             <th scope="col">BlockRank</th>
-            <th scope="col">AD_1st</th>
+            {/* <th scope="col">AD_1st</th>
             <th scope="col">AD_2nd</th>
-            <th scope="col">AD_3rd</th>
+            <th scope="col">AD_3rd</th> */}
           </tr>
         </thead>
         <tbody>
@@ -97,9 +97,9 @@ function App() {
                 <th>{d.Keyword}</th>
                 <td>{d.Category}</td>
                 <td>{d.BlockRank}</td>
-                <td>{d.AD_1st}</td>
+                {/* <td>{d.AD_1st}</td>
                 <td>{d.AD_2nd}</td>
-                <td>{d.AD_3rd}</td>
+                <td>{d.AD_3rd}</td> */}
               </tr>
             ))
           }
