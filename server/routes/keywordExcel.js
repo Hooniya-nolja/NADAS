@@ -42,7 +42,7 @@ const wrap = asyncFn => {
   })  
 }
 
-router.post('/', async (req, res) => {
+router.post('/', wrap(async(req, res) => {
   try {
     const excelData = req.body.excelData;
     excelDataOver = req.body.excelData;
@@ -50,20 +50,20 @@ router.post('/', async (req, res) => {
     await searchPageCategory(excelData, res)
 
     res.send(excelDataOver);
+    searchCount = 1;
     return 0;
   } catch (err) {
     console.log('ERROR : \n', err);
     return res.status(res.statusCode).end();
   }
-});
+}));
 
 const searchPageCategory = async (excelData, res) => {
   try {
 
     for (let i in excelData) {
-      let keywordCategory = 'keywordcategory';
-      keywordCategory = await searchKeywordCategory(excelData[i].Keyword, i, res);
-      await apiDelay(100);
+      await searchKeywordCategory(excelData[i].Keyword, i, res);
+      await apiDelay(50);
     }
 
     // console.log('=============== Here is searchPageCategory finish =============== \n');
@@ -105,26 +105,25 @@ const searchKeywordCategory = (keyword, num, res) => {
 }
 
 const getCategoryKinds = (searchResultArr) => {
-  let keywordCategoryArr = [searchResultArr[0].category1 +'>'+ searchResultArr[0].category2 +'>'+ searchResultArr[0].category3 +'>'+ searchResultArr[0].category4];
-  let productCategory;
-  for(let i=1; i<10; i++){
-    productCategory = searchResultArr[i].category1 +'>'+ searchResultArr[i].category2 +'>'+ searchResultArr[i].category3 +'>'+ searchResultArr[i].category4;
-    if (!keywordCategoryArr.includes(productCategory)) keywordCategoryArr.push(productCategory);
-  }
-  let keywordCategoryString = keywordCategoryArr.join(' AND ');
+  let keywordCategoryString = '';
+  if (searchResultArr.length) {
+    let keywordCategoryArr = [searchResultArr[0].category1 +'>'+ searchResultArr[0].category2 +'>'+ searchResultArr[0].category3 +'>'+ searchResultArr[0].category4];
+    let productCategory;
+    for(let i=1; i<10; i++){
+      if (searchResultArr[i]) {
+        productCategory = searchResultArr[i].category1 +'>'+ searchResultArr[i].category2 +'>'+ searchResultArr[i].category3 +'>'+ searchResultArr[i].category4;
+        if (!keywordCategoryArr.includes(productCategory)) keywordCategoryArr.push(productCategory);
+      } else {}
+    }
+    keywordCategoryString = keywordCategoryArr.join(' AND ');
+  } else {keywordCategoryString = '검색결과가 없는 키워드입니다.';} 
+
   return keywordCategoryString;
 }
 
-// async function testFunc() {
-//     setTimeout(function() {
-//       console.log('THIS IS testFunc !@#@!#!@#@!#\n');
-//       resolve();
-//     }, 1000);
-// }
 function apiDelay(time) {
   return new Promise((resolve) => {
     setTimeout(() => {
-      // console.log('THIS IS testFunc !@#@!#!@#@!#\n')
       resolve();
     }, time);
   });

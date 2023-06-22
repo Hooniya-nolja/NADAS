@@ -71,10 +71,13 @@ function App() {
           readExcel(file);
         }}
       />
-
-      <button className='excel-btn' onClick={()=> excelDownload(items)}>
+      {items[0] && 
+        <button className='excel-btn' onClick={()=> excelDownload(items)}>
         엑셀 다운로드
-      </button>
+        </button>}
+      {/* <button className='excel-btn' onClick={()=> excelDownload(items)}>
+        엑셀 다운로드
+      </button> */}
 
       <table class="table">
         <thead>
