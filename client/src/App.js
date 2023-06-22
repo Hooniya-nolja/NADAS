@@ -33,7 +33,7 @@ function App() {
     });
 
     promise.then((d)=>{
-      setItems(d);
+      // setItems(d);
       sendExcelData(d);
     });
 
@@ -41,11 +41,13 @@ function App() {
 
   const sendExcelData = async(excelData) => {
     try {
+      console.log('Before original excel data : \n', excelData);
       const response = await axios.post('/keyword-excel', {
         excelData
       });
-      // console.log('aaaaaaa');
-      // console.log('CLIENT send data : ', response.excelData);
+      console.log('POST keyword-excel response : \n', response.data);
+      setItems(response.data);
+
     } catch (err) {
       console.log('ERROR sendExcelData : \n', err.response);
     }
