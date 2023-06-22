@@ -5,11 +5,11 @@ const puppeteer = require('puppeteer');
 router.get('/', async (req, res) => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  await page.goto('https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=0&ie=utf8&query=%EB%95%80%EB%B3%B5');
+  await page.goto('https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=0&ie=utf8&query=땀복');
   const data = await page.evaluate(() => {
     return {
       title: document.title,
-      body: document.querySelectorAll('.lnb_menu .base > li')[1].innerText
+      body: document.querySelectorAll('.lnb_menu .base > li')[2].innerText
     }
   });
   await browser.close();

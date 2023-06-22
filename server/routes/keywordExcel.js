@@ -5,6 +5,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { response } = require('../app');
 const { resolve } = require('path');
+const { searchBlockOrder } = require('../searchBlockOrder.js');
+// import { searchBlockOrder } from '../searchBlockOrder.js';
+// const searchBlockOrderFunc = searchBlockOrder.searchBlockOrder();
 
 let client_id = 'lUVXg6tiDzC4LmrpRtIa';
 let client_secret = 'rfhbfOAfPV';
@@ -47,7 +50,11 @@ router.post('/', wrap(async(req, res) => {
     const excelData = req.body.excelData;
     excelDataOver = req.body.excelData;
 
-    await searchPageCategory(excelData, res)
+    await searchPageCategory(excelData, res);
+    await searchBlockOrder(excelData, res);
+    // category 찾아둔것 미리 저장
+    // block 찾아둔것 따로 저장
+    // 서로 동시 실행하고 여기서 차례대로 대입하자
 
     res.send(excelDataOver);
     searchCount = 1;
@@ -89,7 +96,7 @@ const searchKeywordCategory = (keyword, num, res) => {
       if (!error && response.statusCode == 200) {
         searchResult = JSON.parse(body).items;
         categoryKinds = getCategoryKinds(searchResult);
-        console.log('#',searchCount,' categoryKinds : ', categoryKinds);
+        console.log('#',searchCount,` categoryKinds of [${excelDataOver[num].Keyword}] : `, categoryKinds);
         searchCount++;
         excelDataOver[num].Category = categoryKinds;
         resolve(categoryKinds);
@@ -128,5 +135,7 @@ function apiDelay(time) {
     }, time);
   });
 }
+
+
 
 module.exports = router;
