@@ -4,6 +4,7 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { response } = require('../app');
+const { resolve } = require('path');
 
 let client_id = 'lUVXg6tiDzC4LmrpRtIa';
 let client_secret = 'rfhbfOAfPV';
@@ -40,15 +41,18 @@ const wrap = asyncFn => {
   })  
 }
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const excelData = req.body.excelData;
     excelDataOver = req.body.excelData;
-    // console.log('SERVER get data : \n',excelData.length, excelData);
-    searchPageCategory(excelData, res)
-    setTimeout(function() {
-      res.send(excelDataOver);
-    }, 3000);
+
+    await searchPageCategory(excelData, res)
+    console.log('=============== Here is routerPOST =============== \n');
+
+    res.send(excelDataOver);
+    // setTimeout(function() {
+    //   res.send(excelDataOver);
+    // }, 3000);
     console.log('SEARCH FINISHED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     return 0;
   } catch (err) {
@@ -57,69 +61,64 @@ router.post('/', (req, res) => {
   }
 });
 
-const searchPageCategory = (excelData, res) => {
+const searchPageCategory = async (excelData, res) => {
   try {
     console.log('HERE222222222');
+
     for (let i in excelData) {
       console.log('HERE33333333333');
-
       let keywordCategory = 'keywordcategory';
-      keywordCategory = searchKeywordCategory(excelData[i].Keyword, i, res);
+      keywordCategory = await searchKeywordCategory(excelData[i].Keyword, i, res);
+      await apiDelay(100);
       console.log('HERE44444444444');
-      // excelData[i].Category = keywordCategory;
-      // return excelData;
-      // console.log('return############ keywordCategory : ', keywordCategory);
-      // excelDataOver[i].Category = keywordCategory;
-      // console.log('excelDataOver [' + i + '] : \n', excelDataOver);
     }
-    setTimeout(function() {
-      console.log('excelDataOver : \n', excelDataOver);
-    }, 1000);
+
+    // console.log('HERE33333333333');
+    // await searchKeywordCategory(excelData[0].Keyword, 0, res);
+    // console.log('HERE44444444444');
+
+    // console.log('HERE55555555555');
+    // await searchKeywordCategory(excelData[1].Keyword, 1, res);
+    // console.log('HERE666666666666');
+
+    console.log('=============== Here is searchPageCategory finish =============== \n');
     return 0;
   } catch (error) {
     console.log('ERROR :: error in searchPageCategory Function\n ' + error);
-    return res.status(response.statusCode).end();
+    return res.status(res.statusCode).end();
   }
 }
 
 const searchKeywordCategory = (keyword, num, res) => {
-  let api_url = 'https://openapi.naver.com/v1/search/shop.json?query=' + encodeURI(keyword); // JSON 결과
-  let searchResult;
-  let categoryKinds;
+  return new Promise((resolve) => {
+    let api_url = 'https://openapi.naver.com/v1/search/shop.json?query=' + encodeURI(keyword); // JSON 결과
+    let searchResult;
+    let categoryKinds;
+  
+    let request = require('request');
+    let options = {
+        url: api_url,
+        headers: {'X-Naver-Client-Id':client_id, 'X-Naver-Client-Secret': client_secret}
+     };
+    request.get(options, async function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        searchResult = JSON.parse(body).items;
+        console.log('Before REQUEST #######\n');
+        categoryKinds = getCategoryKinds(searchResult);
+        console.log('categoryKinds : ', categoryKinds);
+        excelDataOver[num].Category = categoryKinds;
+        resolve(categoryKinds);
+        // return categoryKinds;
+      } else {
+        console.log('error = ' + response.statusCode + '\n ERROR at API REQUEST :: ' + error);
+        resolve(res.status(response.statusCode).end());
+        // return res.status(response.statusCode).end();
+      }
+    });
+  
+    return categoryKinds;
+  }).catch(function(error) { console.log('ERROR at searchKeyWordCategory catch : \n' + error); });
 
-  let request = require('request');
-  let options = {
-      url: api_url,
-      headers: {'X-Naver-Client-Id':client_id, 'X-Naver-Client-Secret': client_secret}
-   };
-  request.get(options, async function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      searchResult = JSON.parse(body).items;
-      // console.log(searchResult[0].category3);
-      // console.log('category sum : ', searchResult[0].category1 + searchResult[0].category2 + searchResult[0].category3);
-      // console.log('category sum : ', searchResult[0].category1 +'>'+ searchResult[0].category2 +'>'+ searchResult[0].category3);
-      categoryKinds = getCategoryKinds(searchResult);
-      // return getCategoryKinds(searchResult);
-      console.log('categoryKinds : ', categoryKinds);
-      excelDataOver[num].Category = categoryKinds;
-      // if(num == (excelDataOver.length - 1)) {
-      //   console.log('\nEXCELDATAOVER IS FILLED AND res.send operate\n');
-      //   res.send(excelDataOver);
-      //   return categoryKinds;
-
-      // } else {
-      //   res.writeHead(200, {'Content-Type': 'text/json;charset=utf-8'});
-      //   return categoryKinds;
-
-      // }
-      return categoryKinds;
-    } else {
-      console.log('error = ' + response.statusCode);
-      return res.status(response.statusCode).end();
-    }
-  });
-
-  return categoryKinds;
 }
 
 const getCategoryKinds = (searchResultArr) => {
@@ -127,11 +126,25 @@ const getCategoryKinds = (searchResultArr) => {
   let productCategory;
   for(let i=1; i<10; i++){
     productCategory = searchResultArr[i].category1 +'>'+ searchResultArr[i].category2 +'>'+ searchResultArr[i].category3 +'>'+ searchResultArr[i].category4;
-    // if (productCategory !== keywordCategoryArr[0]) keywordCategoryArr.push(', ', productCategory);
     if (!keywordCategoryArr.includes(productCategory)) keywordCategoryArr.push(', ', productCategory);
   }
   console.log('keywordCategoryArr : \n', keywordCategoryArr);
   return keywordCategoryArr;
+}
+
+// async function testFunc() {
+//     setTimeout(function() {
+//       console.log('THIS IS testFunc !@#@!#!@#@!#\n');
+//       resolve();
+//     }, 1000);
+// }
+function apiDelay(time) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      // console.log('THIS IS testFunc !@#@!#!@#@!#\n')
+      resolve();
+    }, time);
+  });
 }
 
 module.exports = router;
