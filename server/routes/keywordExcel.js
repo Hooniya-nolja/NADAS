@@ -126,10 +126,11 @@ const getCategoryKinds = (searchResultArr) => {
   let productCategory;
   for(let i=1; i<10; i++){
     productCategory = searchResultArr[i].category1 +'>'+ searchResultArr[i].category2 +'>'+ searchResultArr[i].category3 +'>'+ searchResultArr[i].category4;
-    if (!keywordCategoryArr.includes(productCategory)) keywordCategoryArr.push(', ', productCategory);
+    if (!keywordCategoryArr.includes(productCategory)) keywordCategoryArr.push(productCategory);
   }
-  console.log('keywordCategoryArr : \n', keywordCategoryArr);
-  return keywordCategoryArr;
+  let keywordCategoryString = keywordCategoryArr.join(' AND ');
+  console.log('keywordCategoryString : \n', keywordCategoryString);
+  return keywordCategoryString;
 }
 
 // async function testFunc() {

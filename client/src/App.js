@@ -53,6 +53,15 @@ function App() {
     }
   }
 
+  const excelDownload = async (columns) => {
+    const ws = XLSX.utils.json_to_sheet(columns);
+    const wb = XLSX.utils.book_new();
+ 
+    console.log('items : ', items);
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, `NADAS_${Date.now()}.xlsx`);
+  };
+
   return (
     <div>
       <input 
@@ -62,6 +71,10 @@ function App() {
           readExcel(file);
         }}
       />
+
+      <button className='excel-btn' onClick={()=> excelDownload(items)}>
+        엑셀 다운로드
+      </button>
 
       <table class="table">
         <thead>
