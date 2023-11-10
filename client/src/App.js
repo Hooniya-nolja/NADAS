@@ -33,7 +33,7 @@ function App() {
     });
 
     promise.then((d)=>{
-      setItems(d);
+      // setItems(d);
       sendExcelData(d);
     });
 
@@ -41,15 +41,26 @@ function App() {
 
   const sendExcelData = async(excelData) => {
     try {
+      console.log('Before original excel data : \n', excelData);
       const response = await axios.post('/keyword-excel', {
         excelData
       });
-      // console.log('aaaaaaa');
-      // console.log('CLIENT send data : ', response.excelData);
+      console.log('POST keyword-excel response : \n', response.data);
+      setItems(response.data);
+
     } catch (err) {
       console.log('ERROR sendExcelData : \n', err.response);
     }
   }
+
+  const excelDownload = async (columns) => {
+    const ws = XLSX.utils.json_to_sheet(columns);
+    const wb = XLSX.utils.book_new();
+ 
+    console.log('Excel download ==> excelData : ', items);
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, `NADAS_${Date.now()}.xlsx`);
+  };
 
   return (
     <div>
@@ -60,6 +71,13 @@ function App() {
           readExcel(file);
         }}
       />
+      {items[0] && 
+        <button className='excel-btn' onClick={()=> excelDownload(items)}>
+        엑셀 다운로드
+        </button>}
+      {/* <button className='excel-btn' onClick={()=> excelDownload(items)}>
+        엑셀 다운로드
+      </button> */}
 
       <table class="table">
         <thead>
@@ -67,9 +85,9 @@ function App() {
             <th scope="col">Keyword</th>
             <th scope="col">Category</th>
             <th scope="col">BlockRank</th>
-            <th scope="col">AD_1st</th>
+            {/* <th scope="col">AD_1st</th>
             <th scope="col">AD_2nd</th>
-            <th scope="col">AD_3rd</th>
+            <th scope="col">AD_3rd</th> */}
           </tr>
         </thead>
         <tbody>
@@ -79,9 +97,9 @@ function App() {
                 <th>{d.Keyword}</th>
                 <td>{d.Category}</td>
                 <td>{d.BlockRank}</td>
-                <td>{d.AD_1st}</td>
+                {/* <td>{d.AD_1st}</td>
                 <td>{d.AD_2nd}</td>
-                <td>{d.AD_3rd}</td>
+                <td>{d.AD_3rd}</td> */}
               </tr>
             ))
           }
