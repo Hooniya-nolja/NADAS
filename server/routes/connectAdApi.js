@@ -39,13 +39,12 @@ const getRequestOptions = (uri, params = {}) => {
   console.log('### url : ', `${BASE_URL}${uri}`);
   const options = {
     url: `${BASE_URL}${uri}?${qs.stringify(params)}`,
-    // url: `${BASE_URL}${uri}`,
-   body: {
+    body: {
       nccAdgroupId: 'grp-a001-01-000000037950249',
       nccKeywordId: 'nkw-a001-01-000005714528286',
-      bidAmt: 120,
-      useGroupBidAmt: 170
-   },
+      bidAmt: 1900,
+      useGroupBidAmt: false
+    },
 
     headers: {
       'X-Timestamp': timestamp,
@@ -59,10 +58,9 @@ const getRequestOptions = (uri, params = {}) => {
 }
 
 const getKeywordList = (keyword) => {
-  const uri = '/ncc/keywords/nkw-a001-01-000005714528286';
+  const uri = '/ncc/keywords/nkw-a001-01-000005714528286';  // Adkeyword update API
   const params = {
     fields:  'bidAmt',
-
   };
   // const params = 'nad-a001-02-000000146518095';
   const options = getRequestOptions(uri, params);
@@ -76,8 +74,8 @@ const getKeywordList = (keyword) => {
         reject(error);
       } else {
         // request.body.bidAmt = 100;
-        console.log('response: ', response.status);
-        console.log('body: ', body);
+        console.log('response: ', response);
+        console.log('body: ', response.body);
         console.log('request: ', request.body);
 
         // resolve({

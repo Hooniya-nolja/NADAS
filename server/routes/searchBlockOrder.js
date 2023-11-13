@@ -3,7 +3,7 @@ const puppeteer = require('puppeteer');
 
 const searchBlockOrder = async (excelData, res) => {
     const browser = await puppeteer.launch({
-      headless: false
+      headless: true
     });
     const page = await browser.newPage();
 

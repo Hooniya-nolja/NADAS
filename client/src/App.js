@@ -71,13 +71,18 @@ function App() {
           readExcel(file);
         }}
       />
-      {items[0] && 
+      {
+        items[0] && 
         <button className='excel-btn' onClick={()=> excelDownload(items)}>
         엑셀 다운로드
-        </button>}
-      {/* <button className='excel-btn' onClick={()=> excelDownload(items)}>
-        엑셀 다운로드
-      </button> */}
+        </button>
+      }
+      {
+        items[0] && 
+        <button className='reload-btn' onClick={()=> window.location.reload()}>
+          새로고침
+        </button>
+      }
 
       <table class="table">
         <thead>
