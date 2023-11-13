@@ -11,6 +11,7 @@ var getSearchBlockOrderRouter = require('./routes/getSearchBlockOrder');
 var checkAdSectionRouter = require('./routes/checkAdSection');
 const keywordExcelRouter = require('./routes/keywordExcel');
 const connectAdApiRouter = require('./routes/connectAdApi');
+const autoBidRouter = require('./routes/autoBid');
 
 var app = express();
 
@@ -31,6 +32,7 @@ app.use('/get-search-block-order', getSearchBlockOrderRouter);
 app.use('/check-ad-section', checkAdSectionRouter);
 app.use('/keyword-excel', keywordExcelRouter);
 app.use('/connect-ad-api', connectAdApiRouter);
+app.use('/auto-bid', autoBidRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

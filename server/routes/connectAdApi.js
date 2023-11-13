@@ -42,7 +42,7 @@ const getRequestOptions = (uri, params = {}) => {
     body: {
       nccAdgroupId: 'grp-a001-01-000000037950249',
       nccKeywordId: 'nkw-a001-01-000005714528286',
-      bidAmt: 1900,
+      bidAmt: 300,
       useGroupBidAmt: false
     },
 
