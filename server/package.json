@@ -25,6 +25,7 @@
     "qs": "^6.11.2",
     "querystring": "^0.2.1",
     "request": "^2.88.2",
+    "styled-components": "^6.1.1",
     "yarn": "^1.22.19"
   },
   "devDependencies": {
