@@ -18,22 +18,20 @@ const CUSTOMER_ID = '2091136';
 
 const BASE_URL = 'https://api.searchad.naver.com';
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  // getRelKwdStatApi();
-  getKeywordList();
-  res.send('@@@@@@@@@@@@@connectAdAPI@@@@@@@@@@@');
-});
+// const adjustBidAmtFunc = async () => {
+//   const currentBidAmt = await getCurrentBid();
+//   console.log('currentBidAmt', currentBidAmt.bidAmt);
+// }
 
-const getSignature = (timestamp, method, uri) => {
+const getSignature = async (timestamp, method, uri) => {
   const hmac = crypto.createHmac('sha256', SECRET_KEY);
   hmac.update(`${timestamp}.${method}.${uri}`);
   return hmac.digest('base64');
 }
 
-const getRequestOptions = (uri, params = {}) => {
+const getRequestOptions = async (uri, method, params = {}, bid) => {
   const timestamp = Date.now();
-  const signature = getSignature(timestamp, 'PUT', uri);
+  const signature = await getSignature(timestamp, method, uri);
   // const signature = getSignature(timestamp, 'GET', '/ncc/ads');
   // const paramsTemp = 'grp-a001-02-000000033382631';
   console.log('### url : ', `${BASE_URL}${uri}`);
@@ -42,7 +40,7 @@ const getRequestOptions = (uri, params = {}) => {
     body: {
       nccAdgroupId: 'grp-a001-01-000000037950249',
       nccKeywordId: 'nkw-a001-01-000005714528286',
-      bidAmt: 300,
+      bidAmt: bid,
       useGroupBidAmt: false
     },
 
@@ -57,13 +55,13 @@ const getRequestOptions = (uri, params = {}) => {
   return options;
 }
 
-const getKeywordList = (keyword) => {
+const updateKeywordBid = async (bid) => {
   const uri = '/ncc/keywords/nkw-a001-01-000005714528286';  // Adkeyword update API
   const params = {
     fields:  'bidAmt',
   };
   // const params = 'nad-a001-02-000000146518095';
-  const options = getRequestOptions(uri, params);
+  const options = await getRequestOptions(uri, 'PUT', params, bid);
   // const options = getRequestOptions(uri);
 
 
@@ -81,10 +79,37 @@ const getKeywordList = (keyword) => {
         // resolve({
         //   bidAmt: 100
         // });
-        resolve(body);
+        resolve(response);
       }
     });
   });
 }
 
-module.exports = router;
+const getCurrentBid = async () => {
+  const uri = '/ncc/keywords/nkw-a001-01-000005714528286';  // Adkeyword update API
+  const params = {
+  };
+  // const params = 'nad-a001-02-000000146518095';
+  const options = await getRequestOptions(uri, 'GET', params);
+  // const options = getRequestOptions(uri);
+
+
+  return new Promise((resolve, reject) => {
+    request.get(options, (error, request, response, body) => {
+      if (error) {
+        console.log('REQUEST ERROR --- \n', error);
+        reject(error);
+      } else {
+        // request.body.bidAmt = 100;
+        console.log('response: ', response);
+        console.log('### RESPONSE.BIDAMOUNT: ', response.bidAmt);
+        console.log('request: ', request.body);
+        // console.log('currentBidAmt 1', body);
+        // console.log('currentBidAmt 2', body.bidAmt);
+        resolve(response);
+      }
+    });
+  });
+}
+
+module.exports = { updateKeywordBid, getCurrentBid };

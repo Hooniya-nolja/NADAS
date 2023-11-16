@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const { adjustBidAmtFunc } = require('./adkeywordAPI.js');
 
 const readline = require('readline');
 const rl = readline.createInterface({
@@ -21,7 +22,8 @@ const BASE_URL = 'https://api.searchad.naver.com';
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   // getRelKwdStatApi();
-  getKeywordList();
+  // adjustBidAmtFunc();
+  // callAdkeywordAPI();
   res.send('@@@@@@@@@@@@@connectAdAPI@@@@@@@@@@@');
 });
 
@@ -57,7 +59,7 @@ const getRequestOptions = (uri, params = {}) => {
   return options;
 }
 
-const getKeywordList = (keyword) => {
+const callAdkeywordAPI = (keyword) => {
   const uri = '/ncc/keywords/nkw-a001-01-000005714528286';  // Adkeyword update API
   const params = {
     fields:  'bidAmt',

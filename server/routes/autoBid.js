@@ -2,13 +2,14 @@ const { log } = require('console');
 var express = require('express');
 var router = express.Router();
 const puppeteer = require('puppeteer');
+const { updateBidAmtFunc } = require('./updateBidAmtFunc');
 
 let searchKeyword = '스포츠머리띠';
 
 /* 파워링크 입찰가 반영은 3분 30초 이상 소요됨. */
 router.get('/', async function(req, res, next) {
   let adRankNum = 0;
-  let adGoalRank = 3;
+  let adGoalRank = 11;
   const adUrlData = await getAdUrl();
   await checkAdRank(adRankNum, adGoalRank, adUrlData);
   res.send(adUrlData);
@@ -38,13 +39,14 @@ const getAdUrl = async () => {
 
 const checkAdRank = async (adRankNum, adGoalRank, adUrlData) => {
   for (let i in adUrlData.adUrlArr) {
-    if (adUrlData.adUrlArr[i] && adUrlData.adUrlArr[i].indexOf('blacktula2') > -1) { // 내 광고일 때
-      adRankNum = i+1;
+    console.log('This is #', i, ' check');
+    if (adUrlData.adUrlArr[i] && adUrlData.adUrlArr[i].indexOf('blacktula') > -1) { // 내 광고일 때
+      adRankNum = parseInt(i)+1;
       if (adRankNum == adGoalRank) {
         console.log(`#${i} Goal!!!`);
         break;
       } else {
-        console.log(`#${i} Not goal....`);
+        console.log(`#${i} Not goal.... adRankNum is ${adRankNum} // adGoalRank is ${adGoalRank}`);
         adjustBidAmt(adRankNum, adGoalRank);
         break;
       }
@@ -61,17 +63,14 @@ const checkAdRank = async (adRankNum, adGoalRank, adUrlData) => {
 }
 
 const adjustBidAmt = (adRankNum, adGoalRank) => {
-  if (adRankNum > adGoalRank) {
-    increaseBidAmt();
-  } else if (adRankNum < adGoalRank) {
-    decreaseBidAmt();
-  } else {
-    console.log('ERROR ::: adjustBidAmt error with value of adRankNum');
-  }
-}
-
-const increaseBidAmt = () => {
-
+  // if (adRankNum > adGoalRank) {
+  //   updateBidAmtFunc(adRankNum, adGoalRank);
+  // } else if (adRankNum < adGoalRank) {
+  //   updateBidAmtFunc(adRankNum, adGoalRank);
+  // } else {
+  //   console.log('ERROR ::: adjustBidAmt error with value of adRankNum');
+  // }
+  updateBidAmtFunc(adRankNum, adGoalRank);
 }
 
 const adNotFound = () => {
