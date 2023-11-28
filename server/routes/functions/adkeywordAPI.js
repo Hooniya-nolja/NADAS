@@ -18,11 +18,6 @@ const CUSTOMER_ID = '2091136';
 
 const BASE_URL = 'https://api.searchad.naver.com';
 
-// const adjustBidAmtFunc = async () => {
-//   const currentBidAmt = await getCurrentBid();
-//   console.log('currentBidAmt', currentBidAmt.bidAmt);
-// }
-
 const getSignature = async (timestamp, method, uri) => {
   const hmac = crypto.createHmac('sha256', SECRET_KEY);
   hmac.update(`${timestamp}.${method}.${uri}`);

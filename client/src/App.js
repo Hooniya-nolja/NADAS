@@ -5,6 +5,8 @@ import * as XLSX from "xlsx";
 import axios from 'axios';
 import styled from "styled-components";
 import * as S from './styles/styles.js';
+import Bidding from './bidding.js';
+import Tab from './Tab.js';
 
 function App() {
   const [items, setItems] = useState([]);
@@ -69,11 +71,14 @@ function App() {
       <S.InnerContainer>
         <S.ProgramTitle>
           {/* <LogoImg src="icon_NADAS.png" alt="ERROR"/> */}
-          NADAS
+          <div>NADAS</div>
           <S.SubTitle>
             NAVER ADVERTISEMENT ASSISTANT
           </S.SubTitle>
         </S.ProgramTitle>
+
+        <Tab />
+
         <S.InputContainer>
           <S.FileNameLabel id="fileName">첨부파일</S.FileNameLabel>
           <S.LabelExcel for="excelFile">파일찾기</S.LabelExcel>
@@ -134,6 +139,7 @@ function App() {
           </S.CautionText>
         }
       </S.InnerContainer>
+
     </S.Container>
   );
 }

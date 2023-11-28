@@ -2,7 +2,7 @@ const { log } = require('console');
 var express = require('express');
 var router = express.Router();
 const puppeteer = require('puppeteer');
-const { updateBidAmtFunc } = require('./updateBidAmtFunc');
+const { updateBidAmtFunc } = require('./functions/updateBidAmtFunc');
 
 let searchKeyword = '스포츠머리띠';
 
@@ -51,11 +51,6 @@ const checkAdRank = async (adRankNum, adGoalRank, adUrlData) => {
         break;
       }
     }
-    // else if (!adUrlData.adUrlArr[i]) { // 내 광고 아니고 null값일 때
-    //   console.log(`${i} Here is NULL value***`);
-    // } else {  // 내 광고가 아니고, null값도 아닐 때
-    //   console.log(`#${i} There is no your AD with "${searchKeyword}" keyword`);
-    // }
   }
   if (adRankNum < 1) {
     adNotFound();
@@ -63,13 +58,6 @@ const checkAdRank = async (adRankNum, adGoalRank, adUrlData) => {
 }
 
 const adjustBidAmt = (adRankNum, adGoalRank) => {
-  // if (adRankNum > adGoalRank) {
-  //   updateBidAmtFunc(adRankNum, adGoalRank);
-  // } else if (adRankNum < adGoalRank) {
-  //   updateBidAmtFunc(adRankNum, adGoalRank);
-  // } else {
-  //   console.log('ERROR ::: adjustBidAmt error with value of adRankNum');
-  // }
   updateBidAmtFunc(adRankNum, adGoalRank);
 }
 

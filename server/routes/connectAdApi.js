@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { adjustBidAmtFunc } = require('./adkeywordAPI.js');
+const { adjustBidAmtFunc } = require('./functions/adkeywordAPI.js');
 
 const readline = require('readline');
 const rl = readline.createInterface({
