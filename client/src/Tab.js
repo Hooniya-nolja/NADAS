@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import KeywordAnalyze from "./KeywordAnalyze";
 
 function Tab() {
   const [currentTab, clickTab] = useState(0);
 
   const menuArr = [
-    { name: '키워드 분석', content: 'Tab menu ONE' },
-    { name: '자동 입찰', content: 'Tab menu TWO' },
-    { name: '데이터 분석 (개발 중)', content: 'Tab menu THREE' },
+    { name: '키워드 분석', content: <KeywordAnalyze /> },
+    { name: '자동 입찰', content: <Desc><p>Tab menu TWO</p></Desc> },
+    { name: '데이터 분석 (개발 중)', content: <Desc><p>Tab menu THREE</p></Desc> },
   ];
 
   const selectMenuHandler = (index) => {
@@ -30,9 +31,7 @@ function Tab() {
               onClick={() => selectMenuHandler(index)}>{el.name}</li>
             ))}
         </TabMenu>
-        <Desc>
-          <p>{menuArr[currentTab].content}</p>
-        </Desc>
+        {menuArr[currentTab].content}
       </div>
     </>
   )
