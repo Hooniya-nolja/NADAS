@@ -27,8 +27,6 @@ const getSignature = async (timestamp, method, uri) => {
 const getRequestOptions = async (uri, method, params = {}, bid) => {
   const timestamp = Date.now();
   const signature = await getSignature(timestamp, method, uri);
-  // const signature = getSignature(timestamp, 'GET', '/ncc/ads');
-  // const paramsTemp = 'grp-a001-02-000000033382631';
   console.log('### url : ', `${BASE_URL}${uri}`);
   const options = {
     url: `${BASE_URL}${uri}?${qs.stringify(params)}`,
@@ -66,14 +64,9 @@ const updateKeywordBid = async (bid) => {
         console.log('REQUEST ERROR --- \n', error);
         reject(error);
       } else {
-        // request.body.bidAmt = 100;
-        console.log('response: ', response);
-        console.log('body: ', response.body);
-        console.log('request: ', request.body);
-
-        // resolve({
-        //   bidAmt: 100
-        // });
+        // console.log('response: ', response);
+        // console.log('body: ', response.body);
+        // console.log('request: ', request.body);
         resolve(response);
       }
     });
@@ -86,8 +79,6 @@ const getCurrentBid = async () => {
   };
   // const params = 'nad-a001-02-000000146518095';
   const options = await getRequestOptions(uri, 'GET', params);
-  // const options = getRequestOptions(uri);
-
 
   return new Promise((resolve, reject) => {
     request.get(options, (error, request, response, body) => {
@@ -95,12 +86,9 @@ const getCurrentBid = async () => {
         console.log('REQUEST ERROR --- \n', error);
         reject(error);
       } else {
-        // request.body.bidAmt = 100;
-        console.log('response: ', response);
-        console.log('### RESPONSE.BIDAMOUNT: ', response.bidAmt);
-        console.log('request: ', request.body);
-        // console.log('currentBidAmt 1', body);
-        // console.log('currentBidAmt 2', body.bidAmt);
+        // console.log('response: ', response);
+        // console.log('### RESPONSE.BIDAMOUNT: ', response.bidAmt);
+        // console.log('request: ', request.body);
         resolve(response);
       }
     });
