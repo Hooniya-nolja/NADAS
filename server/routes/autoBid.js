@@ -9,27 +9,36 @@ let searchKeyword = '스포츠머리띠';
 /* 파워링크 입찰가 반영은 3분 30초 이상 소요됨. */
 router.get('/', async function(req, res, next) {
   let adRankNum = 0;
-  let adGoalRank = 10;
-  let bidMax = 300;
+  let adGoalRank = 12;
+  let bidMax = 500;
   let loopCount = 1;
+
   const adUrlData = await getAdUrlArr();
+  await checkAdRank(adRankNum, adGoalRank, bidMax, adUrlData);
 
   let loop = setTimeout(async function loopFunc() {
-    await checkAdRank(adRankNum, adGoalRank, bidMax, adUrlData);
     console.log(`\n\n -------------  LOOP  #${loopCount++}  ------------- \n\n`);
-    loop = setTimeout(loopFunc, 10000)
-  }, 10000);
+    const adUrlData = await getAdUrlArr();
+    await checkAdRank(adRankNum, adGoalRank, bidMax, adUrlData);
+    loop = setTimeout(loopFunc, 240000)
+  }, 240000);
 
   res.send(adUrlData);
 });
 
 const getAdUrlArr = async () => {
   const browser = await puppeteer.launch({
-    headless: "new"
+    // headless: "new"
+    headless: false
   });
   const page = await browser.newPage();
+  await page.setViewport({ width: 800, height: 580 });
   await page.goto(`https://ad.search.naver.com/search.naver?where=ad&query=${searchKeyword}`);
+  await new Promise((page) => setTimeout(page, 1000));
   const data = await page.evaluate(() => {
+    // for (let i=1; i<6; i++) {
+    //   window.scrollBy(0, 500*i);
+    // }
     let adUrlClassArr = document.querySelectorAll('.lst_type > li .inner .url_area .url');
     let adUrlArr = [];
     for (let k in adUrlClassArr) {
@@ -40,6 +49,7 @@ const getAdUrlArr = async () => {
       adUrlClassArr: adUrlClassArr
     }
   });
+  await page.screenshot({ path: 'screenshot5.png', fullPage: true });
   await browser.close();
   console.log('adUrlArr ===== ', data.adUrlArr);
   return data;
