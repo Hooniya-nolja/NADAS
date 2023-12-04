@@ -15,13 +15,14 @@ router.get('/', async function(req, res, next) {
 
   const adUrlData = await getAdUrlArr();
   await checkAdRank(adRankNum, adGoalRank, bidMax, adUrlData);
+  console.log('\n@@@@@@@@@@ ', req.body.keyword), ' @@@@@@@@@@ ';
 
   let loop = setTimeout(async function loopFunc() {
     console.log(`\n\n -------------  LOOP  #${loopCount++}  ------------- \n\n`);
     const adUrlData = await getAdUrlArr();
     await checkAdRank(adRankNum, adGoalRank, bidMax, adUrlData);
-    loop = setTimeout(loopFunc, 240000)
-  }, 240000);
+    loop = setTimeout(loopFunc, 10000)  // 4분 240000,  1시간 3,600,000
+  }, 10000);
 
   res.send(adUrlData);
 });

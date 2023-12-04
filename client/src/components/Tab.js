@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import KeywordAnalyze from "./KeywordAnalyze";
+import AutoBid from "./AutoBid";
 
 function Tab() {
   const [currentTab, clickTab] = useState(0);
 
   const menuArr = [
     { name: '키워드 분석', content: <KeywordAnalyze /> },
-    { name: '자동 입찰', content: <Desc><p>Tab menu TWO</p></Desc> },
+    { name: '자동 입찰', content: <AutoBid /> },
     { name: '데이터 분석 (개발 중)', content: <Desc><p>Tab menu THREE</p></Desc> },
   ];
 

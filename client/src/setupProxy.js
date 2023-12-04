@@ -1,9 +1,15 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
+  // app.use(
+  //   '/keyword-excel',
+  //   createProxyMiddleware({
+  //     target: 'http://localhost:5000',
+  //     changeOrigin: true,
+  //   })
+  // );
   app.use(
-    '/keyword-excel',
-    createProxyMiddleware({
+    createProxyMiddleware('/auto-bid',{
       target: 'http://localhost:5000',
       changeOrigin: true,
     })

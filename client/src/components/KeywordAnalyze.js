@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import logo from './logo.svg';
-import './App.css';
+// import './App.css';
 import * as XLSX from "xlsx";
 import axios from 'axios';
-import styled from "styled-components";
-import * as S from './styles/styles.js';
-import Tab from './Tab.js';
+import * as S from '../styles/styles.js';
 
 function KeywordAnalyze() {
   const [items, setItems] = useState([]);

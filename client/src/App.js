@@ -5,8 +5,7 @@ import * as XLSX from "xlsx";
 import axios from 'axios';
 import styled from "styled-components";
 import * as S from './styles/styles.js';
-import Tab from './Tab.js';
-import KeywordAnalyze from "./KeywordAnalyze.js";
+import Tab from './components/Tab.js';
 
 function App() {
   
