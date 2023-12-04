@@ -4,30 +4,41 @@ var router = express.Router();
 const puppeteer = require('puppeteer');
 const { updateBidAmtFunc } = require('./functions/updateBidAmtFunc');
 
-let searchKeyword = '스포츠머리띠';
+// let searchKeyword = '스포츠머리띠';
 
 /* 파워링크 입찰가 반영은 3분 30초 이상 소요됨. */
-router.get('/', async function(req, res, next) {
+router.post('/', async function(req, res, next) {
   let adRankNum = 0;
   let adGoalRank = 12;
   let bidMax = 500;
   let loopCount = 1;
+  let searchKeyword = req.body.keyword;
+  let isOn = req.body.isOn;
 
-  const adUrlData = await getAdUrlArr();
-  await checkAdRank(adRankNum, adGoalRank, bidMax, adUrlData);
-  console.log('\n@@@@@@@@@@ ', req.body.keyword), ' @@@@@@@@@@ ';
-
-  let loop = setTimeout(async function loopFunc() {
-    console.log(`\n\n -------------  LOOP  #${loopCount++}  ------------- \n\n`);
-    const adUrlData = await getAdUrlArr();
+  if (isOn) {
+    const adUrlData = await getAdUrlArr(searchKeyword);
     await checkAdRank(adRankNum, adGoalRank, bidMax, adUrlData);
-    loop = setTimeout(loopFunc, 10000)  // 4분 240000,  1시간 3,600,000
-  }, 10000);
+    console.log('\n@@@@@@@@@@ ', req.body.keyword, ' @@@@@@@@@@ ', req.body.isOn);
 
-  res.send(adUrlData);
+    let loop = setTimeout(async function loopFunc() {
+      if (isOn) {
+        console.log(`\n\n -------------  LOOP  #${loopCount++}  ------------- \n\n`);
+        const adUrlData = await getAdUrlArr(searchKeyword);
+        await checkAdRank(adRankNum, adGoalRank, bidMax, adUrlData);
+        loop = setTimeout(loopFunc, 10000)  // 4분 240000,  1시간 3,600,000
+      }
+    }, 10000);
+
+    res.send(adUrlData);
+  }
+  else {
+    console.log('\n [[[[[[[[[[[     AUTO BIDDING OFF   자동 입찰이 종료되었습니다     ]]]]]]]]]]] \n');
+    res.send();
+    return 0;
+  }
 });
 
-const getAdUrlArr = async () => {
+const getAdUrlArr = async (searchKeyword) => {
   const browser = await puppeteer.launch({
     // headless: "new"
     headless: false
@@ -37,9 +48,6 @@ const getAdUrlArr = async () => {
   await page.goto(`https://ad.search.naver.com/search.naver?where=ad&query=${searchKeyword}`);
   await new Promise((page) => setTimeout(page, 1000));
   const data = await page.evaluate(() => {
-    // for (let i=1; i<6; i++) {
-    //   window.scrollBy(0, 500*i);
-    // }
     let adUrlClassArr = document.querySelectorAll('.lst_type > li .inner .url_area .url');
     let adUrlArr = [];
     for (let k in adUrlClassArr) {
@@ -50,7 +58,7 @@ const getAdUrlArr = async () => {
       adUrlClassArr: adUrlClassArr
     }
   });
-  await page.screenshot({ path: 'screenshot5.png', fullPage: true });
+  // await page.screenshot({ path: 'screenshot5.png', fullPage: true });
   await browser.close();
   console.log('adUrlArr ===== ', data.adUrlArr);
   return data;
