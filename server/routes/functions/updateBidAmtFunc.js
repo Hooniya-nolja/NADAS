@@ -5,15 +5,15 @@ const updateBidAmtFunc = async (adRankNum, adGoalRank, bidMax) => {
   const currentBid = getResponse.bidAmt;
   let putResponse;
   if (adRankNum > adGoalRank) {
-    if (currentBid+30 > bidMax) {
+    if (currentBid+100 > bidMax) {
       console.log('[BID MAXIMUM] Cannot increase bid  ===>  currentBid:',currentBid,' bidMax:', bidMax, '\n');
       console.log('\n!!!! current ranking: ', adRankNum, ' / goal ranking: ', adGoalRank);
       return 0;
     } else {
-      putResponse = await updateKeywordBid(currentBid + 30);
+      putResponse = await updateKeywordBid(currentBid + 100);
     }
   } else if (adRankNum < adGoalRank) {
-    putResponse = await updateKeywordBid(currentBid - 30);
+    putResponse = await updateKeywordBid(currentBid - 100);
   } else {
     console.log('ERROR ::: adjustBidAmt error with value of adRankNum');
     return 0;

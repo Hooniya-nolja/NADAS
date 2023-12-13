@@ -29,15 +29,21 @@ function AutoBid() {
     <BoxContainer>
       <BidList>
         <form onSubmit={submitHandler}>
-          <label style={{marginRight : "20px"}}>키워드</label>
+          <label style={{marginRight: "20px"}}>키워드</label>
           <input
             type="text" value={keyword} onChange={keywordHandler}
             style={{marginRight : "50px"}} required
           />
           {/* <button type="submit">입찰 시작</button> */}
           <button
-            type="submit" onClick={() => setIsOn(!isOn)}
-            // style={{}}
+            type="submit"
+            onClick={() => {
+              if (keyword) { setIsOn(!isOn) }
+            }}
+            style={{
+              backgroundColor: isOn ? "green" : "red",
+              color: "#FFFFFF"
+            }}
           >
             { isOn ? 'ON' : 'OFF' }
           </button>

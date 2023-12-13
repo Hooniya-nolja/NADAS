@@ -9,8 +9,8 @@ const { updateBidAmtFunc } = require('./functions/updateBidAmtFunc');
 /* 파워링크 입찰가 반영은 3분 30초 이상 소요됨. */
 router.post('/', async function(req, res, next) {
   let adRankNum = 0;
-  let adGoalRank = 12;
-  let bidMax = 500;
+  let adGoalRank = 15;
+  let bidMax = 300;
   let loopCount = 1;
   let searchKeyword = req.body.keyword;
   let isOn = req.body.isOn;
@@ -23,11 +23,15 @@ router.post('/', async function(req, res, next) {
     let loop = setTimeout(async function loopFunc() {
       if (isOn) {
         console.log(`\n\n -------------  LOOP  #${loopCount++}  ------------- \n\n`);
+        console.log('isOn : ', isOn);
         const adUrlData = await getAdUrlArr(searchKeyword);
         await checkAdRank(adRankNum, adGoalRank, bidMax, adUrlData);
-        loop = setTimeout(loopFunc, 10000)  // 4분 240000,  1시간 3,600,000
+        loop = setTimeout(loopFunc, 240000)  // 4분 240000,  1시간 3,600,000
+      } else {
+        console.log('\n PPPPPPPPPPPROCESS EXIT \n');
+        process.exit(0);
       }
-    }, 10000);
+    }, 240000);
 
     res.send(adUrlData);
   }
@@ -41,7 +45,7 @@ router.post('/', async function(req, res, next) {
 const getAdUrlArr = async (searchKeyword) => {
   const browser = await puppeteer.launch({
     // headless: "new"
-    headless: false
+    headless: true
   });
   const page = await browser.newPage();
   await page.setViewport({ width: 800, height: 580 });

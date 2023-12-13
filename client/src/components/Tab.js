@@ -9,7 +9,7 @@ function Tab() {
   const menuArr = [
     { name: '키워드 분석', content: <KeywordAnalyze /> },
     { name: '자동 입찰', content: <AutoBid /> },
-    { name: '데이터 분석 (개발 중)', content: <Desc><p>Tab menu THREE</p></Desc> },
+    { name: '데이터 분석 (개발 중)', content: <Desc><p>개발 예정</p></Desc> },
   ];
 
   const selectMenuHandler = (index) => {
